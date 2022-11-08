@@ -375,33 +375,22 @@ class AddEvent(QDialog, addEvent.Ui_Dialog):
         for cat in CatDatabase:
             if category == cat.name:
 
-                # Używamy funkcji mainPrimo do wprowadzenia liczby primo
-                newEvent = Event(self.calendarEd.selectedDate().day(), self.calendarEd.selectedDate().month(),
-                                 self.calendarEd.selectedDate().year(), 0, self.lineDesc.text(), cat.name,
-                                 mainPrimo(self))
-                try:
-                    # Nie można stworzyć wydarzenia, które jest już w bazie general
-                    # Dzięki temu przywrócone eventy nie pokryją się z tymi istniejącymi
-                    if newEvent in general.heldEvents:
-                        print("Takie wydarzenie już istnieje")
-                        break
+                if self.lineDesc.text() is None or self.lineDesc.text() == "":
+                    print("To pole nie może być puste")
+                else:
+                    # Używamy funkcji mainPrimo do wprowadzenia liczby primo
+                    newEvent = Event(self.calendarEd.selectedDate().day(), self.calendarEd.selectedDate().month(),
+                                     self.calendarEd.selectedDate().year(), 0, self.lineDesc.text(), cat.name,
+                                     mainPrimo(self))
+                    try:
+                        # Nie można stworzyć wydarzenia, które jest już w bazie general
+                        # Dzięki temu przywrócone eventy nie pokryją się z tymi istniejącymi
+                        if newEvent in general.heldEvents:
+                            print("Takie wydarzenie już istnieje")
+                            break
 
-                    # Zawsze dodajemy do generala i/albo innej kategorii
-                    # General ma mieć wszystkie wydarzenia
-                    if cat.name != general.name:
-                        cat.eventToCat(newEvent)
-                        general.eventToCat(newEvent)
-                        print("Dodano wydarzenie " + self.lineDesc.text() + " do kategorii " + cat.name)
-                        print("Dodano wydarzenie " + self.lineDesc.text() + " do kategorii " + general.name)
-                        self.lineDesc.clear()
-                    else:
-                        general.eventToCat(newEvent)
-                        print("Dodano wydarzenie " + self.lineDesc.text() + " do kategorii " + cat.name)
-                        self.lineDesc.clear()
-
-                # Jeśli kategoria jest pusta:
-                except:
-                    if not cat.heldEvents:
+                        # Zawsze dodajemy do generala i/albo innej kategorii
+                        # General ma mieć wszystkie wydarzenia
                         if cat.name != general.name:
                             cat.eventToCat(newEvent)
                             general.eventToCat(newEvent)
@@ -412,8 +401,22 @@ class AddEvent(QDialog, addEvent.Ui_Dialog):
                             general.eventToCat(newEvent)
                             print("Dodano wydarzenie " + self.lineDesc.text() + " do kategorii " + cat.name)
                             self.lineDesc.clear()
-                    else:
-                        raise TypeError
+
+                    # Jeśli kategoria jest pusta:
+                    except:
+                        if not cat.heldEvents:
+                            if cat.name != general.name:
+                                cat.eventToCat(newEvent)
+                                general.eventToCat(newEvent)
+                                print("Dodano wydarzenie " + self.lineDesc.text() + " do kategorii " + cat.name)
+                                print("Dodano wydarzenie " + self.lineDesc.text() + " do kategorii " + general.name)
+                                self.lineDesc.clear()
+                            else:
+                                general.eventToCat(newEvent)
+                                print("Dodano wydarzenie " + self.lineDesc.text() + " do kategorii " + cat.name)
+                                self.lineDesc.clear()
+                        else:
+                            raise TypeError
 
         # Wyświetlanie wydarzeń po zamknięciu okna przyciskiem OK
         mainWindow.displayEvent()
@@ -503,33 +506,22 @@ class editEvents(QDialog, editEvent.Ui_Dialog):
         for cat in CatDatabase:
             if category == cat.name:
 
-                # Używamy funkcji mainPrimo do wprowadzenia liczby primo
-                newEvent = Event(self.calendarEd.selectedDate().day(), self.calendarEd.selectedDate().month(),
-                                 self.calendarEd.selectedDate().year(), 0, self.lineDesc.text(), cat.name,
-                                 mainPrimo(self))
-                try:
-                    # Nie można stworzyć wydarzenia, które jest już w bazie general
-                    # Dzięki temu przywrócone eventy nie pokryją się z tymi istniejącymi
-                    if newEvent in general.heldEvents:
-                        print("Takie wydarzenie już istnieje")
-                        break
+                if self.lineDesc.text() is None or self.lineDesc.text() == "":
+                    print("To pole nie może być puste")
+                else:
+                    # Używamy funkcji mainPrimo do wprowadzenia liczby primo
+                    newEvent = Event(self.calendarEd.selectedDate().day(), self.calendarEd.selectedDate().month(),
+                                     self.calendarEd.selectedDate().year(), 0, self.lineDesc.text(), cat.name,
+                                     mainPrimo(self))
+                    try:
+                        # Nie można stworzyć wydarzenia, które jest już w bazie general
+                        # Dzięki temu przywrócone eventy nie pokryją się z tymi istniejącymi
+                        if newEvent in general.heldEvents:
+                            print("Takie wydarzenie już istnieje")
+                            break
 
-                    # Zawsze dodajemy do generala i/albo innej kategorii
-                    # General ma mieć wszystkie wydarzenia
-                    if cat.name != general.name:
-                        cat.eventToEdit(newEvent, catIndex)
-                        general.eventToEdit(newEvent, genIndex)
-                        print("Edytowano wydarzenie " + self.lineDesc.text() + " w kategorii " + cat.name)
-                        print("Edytowano wydarzenie " + self.lineDesc.text() + " w kategorii " + general.name)
-                        self.lineDesc.clear()
-                    else:
-                        general.eventToEdit(newEvent, genIndex)
-                        print("Edytowano wydarzenie " + self.lineDesc.text() + " w kategorii " + general.name)
-                        self.lineDesc.clear()
-
-                # Jeśli kategoria jest pusta:
-                except:
-                    if not cat.heldEvents:
+                        # Zawsze dodajemy do generala i/albo innej kategorii
+                        # General ma mieć wszystkie wydarzenia
                         if cat.name != general.name:
                             cat.eventToEdit(newEvent, catIndex)
                             general.eventToEdit(newEvent, genIndex)
@@ -540,12 +532,26 @@ class editEvents(QDialog, editEvent.Ui_Dialog):
                             general.eventToEdit(newEvent, genIndex)
                             print("Edytowano wydarzenie " + self.lineDesc.text() + " w kategorii " + general.name)
                             self.lineDesc.clear()
-                    else:
-                        raise TypeError
 
-                mainWindow.displayEvent()
-                # Ładne zamykanie okienka
-                self.reject()
+                    # Jeśli kategoria jest pusta:
+                    except:
+                        if not cat.heldEvents:
+                            if cat.name != general.name:
+                                cat.eventToEdit(newEvent, catIndex)
+                                general.eventToEdit(newEvent, genIndex)
+                                print("Edytowano wydarzenie " + self.lineDesc.text() + " w kategorii " + cat.name)
+                                print("Edytowano wydarzenie " + self.lineDesc.text() + " w kategorii " + general.name)
+                                self.lineDesc.clear()
+                            else:
+                                general.eventToEdit(newEvent, genIndex)
+                                print("Edytowano wydarzenie " + self.lineDesc.text() + " w kategorii " + general.name)
+                                self.lineDesc.clear()
+                        else:
+                            raise TypeError
+
+                    mainWindow.displayEvent()
+                    # Ładne zamykanie okienka
+                    self.reject()
 
 
 class Primogems:
