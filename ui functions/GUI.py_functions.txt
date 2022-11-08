@@ -1,0 +1,18 @@
+	self.retranslateUi(Dialog)
+        self.pushRemoveCat.clicked.connect(Dialog.execRem) # type: ignore
+        self.pushAddCat.clicked.connect(Dialog.execAdd) # type: ignore
+        self.pushButton.pressed.connect(Dialog.open) # type: ignore
+        self.SelectCatBox.currentIndexChanged['QString'].connect(Dialog.displayEvent) # type: ignore
+        QtCore.QMetaObject.connectSlotsByName(Dialog)
+        self.listView.clicked[QtCore.QModelIndex].connect(self.on_clicked)
+        self.lineEdit.textChanged.connect(self.onChanged2)
+
+
+
+‪D:/Program files studia/JetBrains/PyCharm 2021.3.3/projects/ZZZ/PyQt5/paimon.jpg
+
+
+‪D:/Program files studia/JetBrains/PyCharm 2021.3.3/projects/ZZZ/PyQt5/favicon.ico
+
+1586
+975

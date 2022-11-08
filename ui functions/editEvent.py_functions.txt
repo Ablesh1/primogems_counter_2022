@@ -1,0 +1,5 @@
+        self.retranslateUi(Dialog)
+        self.okButtons.accepted.connect(Dialog.accept)  # type: ignore
+        self.okButtons.rejected.connect(Dialog.reject)  # type: ignore
+        QtCore.QMetaObject.connectSlotsByName(Dialog)
+        self.ifRemindBox.toggled['bool'].connect(Dialog.execRemBox)
