@@ -440,6 +440,7 @@ class editEvents(QDialog, editEvent.Ui_Dialog):
     def setup(self):
         # Ustawienie obecnego opisu eventu w edit line
         self.lineDesc.setText(selectedEvent[0])
+        self.calendarEd.setSelectedDate(QDate(2011, 8, 13))
 
         # Wyszukiwanie obecnej kategorii eventu i ustawienie jej w combobox-ie
         i = 0
