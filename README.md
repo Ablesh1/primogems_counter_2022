@@ -14,4 +14,5 @@ pyuic5 -o editEvent.py editEvent.ui
 
 https://realpython.com/qt-designer-python/  
 
+pip install auto-py-to-exe  
 auto-py-to-exe  
