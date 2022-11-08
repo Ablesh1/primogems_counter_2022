@@ -1,7 +1,7 @@
 # PyQt5
 Python application for counting primogems
 
-Useful commands: 
+# Useful commands: 
 
 python.exe -m pip install --upgrade pip
 python3 -m venv ./venv 
