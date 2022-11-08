@@ -131,12 +131,17 @@ class Window(QMainWindow, Ui_Dialog):
             if x == "":
                 splitted.remove(x)
 
-        # ToDo --- split 3 spacji z początku opisu wydarzenia w listView
+        # ToDo --- usuwanie znaków specjalnych z selectedEvents
+        # split 3 spacji z początku opisu wydarzenia w listView
         splitted[0] = splitted[0][3:]
+        # split enter-a i 3 spacji z początku daty wydarzenia w listView
+        splitted[2] = splitted[2][4:]
 
         selectedEvent.clear()
         for x in splitted:
             selectedEvent.append(x)
+
+        # print(selectedEvent)
 
         dialog = editEvents(self)
         dialog.exec()
@@ -440,7 +445,9 @@ class editEvents(QDialog, editEvent.Ui_Dialog):
     def setup(self):
         # Ustawienie obecnego opisu eventu w edit line
         self.lineDesc.setText(selectedEvent[0])
-        self.calendarEd.setSelectedDate(QDate(2011, 8, 13))
+        # Ustawienie obecnej daty eventu w calendar widget
+        split = selectedEvent[2].split(".")
+        self.calendarEd.setSelectedDate(QDate(int(split[2]), int(split[1]), int(split[0])))
 
         # Wyszukiwanie obecnej kategorii eventu i ustawienie jej w combobox-ie
         i = 0
