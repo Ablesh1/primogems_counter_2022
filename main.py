@@ -731,7 +731,7 @@ def mainPrimo(self):
 
 
 if __name__ == "__main__":
-    general = Category("GENERAL")
+    general = Category("GEN")
     paimon = Category("PAIMON")
     genshin = Category("GENSHIN")
 
