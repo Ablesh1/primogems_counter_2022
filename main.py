@@ -472,11 +472,15 @@ class editEvents(QDialog, editEvent.Ui_Dialog):
         # Aktualnie wybrana kategoria z combobox-a w oknie edycji
         category = self.catCombo.itemText(self.catCombo.currentIndex())
 
+        # Aktualny tekst eventu, zanim zostanie nadpisany zmianą
+        previousText = selectedEvent[0]
+
         # Zwraca numer linii, w której jest edytowany event:
         i = 0
         j = 0
         genIndex = 0
         catIndex = 0
+        keptEvent = []
         for x in CatDatabase:
             # W kategorii general
             if x.name == general.name:
@@ -502,12 +506,16 @@ class editEvents(QDialog, editEvent.Ui_Dialog):
                 # W kategorii general
                 for y in x.heldEvents:
                     if selectedEvent[0] == y.text:                                      # To samo co powyżej
+                        # Zapamiętaj usuwany event
+                        keptEvent = y
                         x.heldEvents.remove(y)
             else:
                 # W kategorii innej niż general
                 for y in x.heldEvents:
                     if QtGui.QStandardItem(y.category).text() == x.name:
                         if selectedEvent[0] == y.text:                                   # To samo co powyżej
+                            # Zapamiętaj usuwany event
+                            keptEvent = y
                             x.heldEvents.remove(y)
 
         # Edycja eventów
@@ -526,7 +534,10 @@ class editEvents(QDialog, editEvent.Ui_Dialog):
                         # Dzięki temu przywrócone eventy nie pokryją się z tymi istniejącymi
                         if newEvent in general.heldEvents:
                             print("Takie wydarzenie już istnieje")
-                            break
+                            # Ustaw na poprzedni domyślny tekst (powrót do stanu przed zmianami)
+                            self.lineDesc.setText(previousText)
+                            # Przywróć event do stanu przed zmianami
+                            newEvent = keptEvent
 
                         # Zawsze dodajemy do generala i/albo innej kategorii
                         # General ma mieć wszystkie wydarzenia
