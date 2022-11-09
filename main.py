@@ -467,6 +467,20 @@ class editEvents(QDialog, editEvent.Ui_Dialog):
                     self.remindComb.hide()
             '''
 
+    # ToDo --- zwiększyć liczbę warunków jak eventy zwiększą liczbę pól
+    # Łatwo porównuje, czy eventy są identyczne
+    @staticmethod
+    def checkIfEqual(selected, y):
+        isEqual = False
+        if selected[0] == y.text:
+            if selected[1] == y.category:
+                split = selected[2].split(".")
+                if int(split[0]) == y.day and int(split[1]) == y.month and int(split[2]) == y.year:
+                    if int(selected[3]) == y.primogems:
+                        isEqual = True
+
+        return isEqual
+
     def accept(self):
 
         # Aktualnie wybrana kategoria z combobox-a w oknie edycji
@@ -486,7 +500,8 @@ class editEvents(QDialog, editEvent.Ui_Dialog):
             if x.name == general.name:
                 for y in x.heldEvents:
                     i += 1
-                    if selectedEvent[0] == y.text:  # Później zrób po wszystkich danych, a nie po tekście na pozycji [0]
+                    if editEvents.checkIfEqual(selectedEvent, y):
+                        print(selectedEvent)
                         genIndex += i
             # W kategorii innej niż general
             else:
@@ -495,7 +510,7 @@ class editEvents(QDialog, editEvent.Ui_Dialog):
                     if category == general.name or category == selectedEvent[1]:
                         if selectedEvent[1] == QtGui.QStandardItem(y.category).text():
                             j += 1
-                            if selectedEvent[0] == y.text:                              # To samo co powyżej
+                            if editEvents.checkIfEqual(selectedEvent, y):
                                 catIndex += j
                     # Jeśli zmieniamy nazwę kategorii na inną niż general
                     else:
@@ -505,7 +520,7 @@ class editEvents(QDialog, editEvent.Ui_Dialog):
             if x.name == general.name:
                 # W kategorii general
                 for y in x.heldEvents:
-                    if selectedEvent[0] == y.text:                                      # To samo co powyżej
+                    if editEvents.checkIfEqual(selectedEvent, y):
                         # Zapamiętaj usuwany event
                         keptEvent = y
                         x.heldEvents.remove(y)
@@ -513,7 +528,7 @@ class editEvents(QDialog, editEvent.Ui_Dialog):
                 # W kategorii innej niż general
                 for y in x.heldEvents:
                     if QtGui.QStandardItem(y.category).text() == x.name:
-                        if selectedEvent[0] == y.text:                                   # To samo co powyżej
+                        if editEvents.checkIfEqual(selectedEvent, y):
                             # Zapamiętaj usuwany event
                             keptEvent = y
                             x.heldEvents.remove(y)
