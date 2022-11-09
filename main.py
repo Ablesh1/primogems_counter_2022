@@ -2,6 +2,7 @@ import select
 import sys
 import addEvent
 import editEvent
+import errorTab
 
 import datetime
 import calendar
@@ -93,6 +94,9 @@ class Window(QMainWindow, Ui_Dialog):
         print(self.SelectCatBox.itemText(self.SelectCatBox.currentIndex()))
     '''
 
+    # Kody błędu przydadzą się do ustalenia reguł działania projektu
+    errorCode = 0
+
     # Funkcja Search
     def onChanged2(self):
 
@@ -143,7 +147,7 @@ class Window(QMainWindow, Ui_Dialog):
 
         # print(selectedEvent)
 
-        dialog = editEvents(self)
+        dialog = EditEvents(self)
         dialog.exec()
 
     # Dodawanie kategorii z CatDatabase do SelectCatBox-a na przy otwarciu okna
@@ -161,6 +165,9 @@ class Window(QMainWindow, Ui_Dialog):
             # General na pewno.
             if toRem == general.name:
                 print("Nie można usunąć kategorii " + toRem)
+                Window.errorCode = 203
+                error = ErrorTab(self)
+                error.exec()
             else:
                 self.SelectCatBox.removeItem(self.SelectCatBox.currentIndex())
 
@@ -176,6 +183,9 @@ class Window(QMainWindow, Ui_Dialog):
 
         except:
             print("Nie ma czego usuwać")
+            Window.errorCode = 204
+            error = ErrorTab(self)
+            error.exec()
             self.setWindowIcon(QIcon('resources/Troll-faceProblem.jpg'))
             self.listView.setStyleSheet("background-image : url(resources/Troll-faceProblem.jpg);")
 
@@ -206,9 +216,15 @@ class Window(QMainWindow, Ui_Dialog):
             else:
                 self.lineEditCat.clear()
                 print("Istnieje już kategoria o nazwie " + text)
+                Window.errorCode = 201
+                error = ErrorTab(self)
+                error.exec()
 
         except TypeError:
             print("Proszę wpisać nazwę kategorii")
+            Window.errorCode = 202
+            error = ErrorTab(self)
+            error.exec()
 
         # Jak na nowo dodamy poprzednio usuniętą kategorię, to odświeży i przywróci jej nazwę jej eventom
         # Jednak nie będą one przypisane do pierwotnej kategorii
@@ -218,6 +234,7 @@ class Window(QMainWindow, Ui_Dialog):
     def execRem(self):
         self.removeCats()
 
+    # ToDo --- coś z tym trzeba zrobić
     # Zapisywanie kategorii (i ich eventów)
     @staticmethod
     def saveEvents():
@@ -240,6 +257,9 @@ class Window(QMainWindow, Ui_Dialog):
         # Tak można łatwo sprawdzić, czy lista jest pusta
         if not CatDatabase:
             print("Brak kategorii")
+            Window.errorCode = 205
+            error = ErrorTab(self)
+            error.exec()
 
         else:
             dialog = AddEvent(self)
@@ -337,6 +357,29 @@ class GUI(QDialog):
         loadUi("GUI.ui", self)
 
 
+# Loading i ładowanie okna błędów
+class ErrorTab(QDialog, errorTab.Ui_Dialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setupUi(self)
+
+        match Window.errorCode:
+            case 101:
+                self.errorLabel.setText("Such an event already exists")
+            case 102:
+                self.errorLabel.setText("Please enter the name of the category")
+            case 201:
+                self.errorLabel.setText("Such a category already exists")
+            case 202:
+                self.errorLabel.setText("Please enter the name of the category")
+            case 203:
+                self.errorLabel.setText("The general category cannot be deleted")
+            case 204:
+                self.errorLabel.setText("There is nothing to delete")
+            case 205:
+                self.errorLabel.setText("No categories")
+
+
 # Loading i otwieranie widget-ów
 class AddEvent(QDialog, addEvent.Ui_Dialog):
     def __init__(self, parent=None):
@@ -382,6 +425,9 @@ class AddEvent(QDialog, addEvent.Ui_Dialog):
 
                 if self.lineDesc.text() is None or self.lineDesc.text() == "":
                     print("To pole nie może być puste")
+                    Window.errorCode = 102
+                    error = ErrorTab(self)
+                    error.exec()
                 else:
                     # Używamy funkcji mainPrimo do wprowadzenia liczby primo
                     newEvent = Event(self.calendarEd.selectedDate().day(), self.calendarEd.selectedDate().month(),
@@ -392,6 +438,9 @@ class AddEvent(QDialog, addEvent.Ui_Dialog):
                         # Dzięki temu przywrócone eventy nie pokryją się z tymi istniejącymi
                         if newEvent in general.heldEvents:
                             print("Takie wydarzenie już istnieje")
+                            Window.errorCode = 101
+                            error = ErrorTab(self)
+                            error.exec()
                             break
 
                         # Zawsze dodajemy do generala i/albo innej kategorii
@@ -427,7 +476,7 @@ class AddEvent(QDialog, addEvent.Ui_Dialog):
         mainWindow.displayEvent()
 
 
-class editEvents(QDialog, editEvent.Ui_Dialog):
+class EditEvents(QDialog, editEvent.Ui_Dialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
@@ -500,7 +549,7 @@ class editEvents(QDialog, editEvent.Ui_Dialog):
             if x.name == general.name:
                 for y in x.heldEvents:
                     i += 1
-                    if editEvents.checkIfEqual(selectedEvent, y):
+                    if EditEvents.checkIfEqual(selectedEvent, y):
                         print(selectedEvent)
                         genIndex += i
             # W kategorii innej niż general
@@ -510,7 +559,7 @@ class editEvents(QDialog, editEvent.Ui_Dialog):
                     if category == general.name or category == selectedEvent[1]:
                         if selectedEvent[1] == QtGui.QStandardItem(y.category).text():
                             j += 1
-                            if editEvents.checkIfEqual(selectedEvent, y):
+                            if EditEvents.checkIfEqual(selectedEvent, y):
                                 catIndex += j
                     # Jeśli zmieniamy nazwę kategorii na inną niż general
                     else:
@@ -520,7 +569,7 @@ class editEvents(QDialog, editEvent.Ui_Dialog):
             if x.name == general.name:
                 # W kategorii general
                 for y in x.heldEvents:
-                    if editEvents.checkIfEqual(selectedEvent, y):
+                    if EditEvents.checkIfEqual(selectedEvent, y):
                         # Zapamiętaj usuwany event
                         keptEvent = y
                         x.heldEvents.remove(y)
@@ -528,7 +577,7 @@ class editEvents(QDialog, editEvent.Ui_Dialog):
                 # W kategorii innej niż general
                 for y in x.heldEvents:
                     if QtGui.QStandardItem(y.category).text() == x.name:
-                        if editEvents.checkIfEqual(selectedEvent, y):
+                        if EditEvents.checkIfEqual(selectedEvent, y):
                             # Zapamiętaj usuwany event
                             keptEvent = y
                             x.heldEvents.remove(y)
@@ -539,6 +588,9 @@ class editEvents(QDialog, editEvent.Ui_Dialog):
 
                 if self.lineDesc.text() is None or self.lineDesc.text() == "":
                     print("To pole nie może być puste")
+                    Window.errorCode = 102
+                    error = ErrorTab(self)
+                    error.exec()
                 else:
                     # Używamy funkcji mainPrimo do wprowadzenia liczby primo
                     newEvent = Event(self.calendarEd.selectedDate().day(), self.calendarEd.selectedDate().month(),
@@ -549,6 +601,10 @@ class editEvents(QDialog, editEvent.Ui_Dialog):
                         # Dzięki temu przywrócone eventy nie pokryją się z tymi istniejącymi
                         if newEvent in general.heldEvents:
                             print("Takie wydarzenie już istnieje")
+                            Window.errorCode = 101
+                            error = ErrorTab(self)
+                            error.exec()
+
                             # Ustaw na poprzedni domyślny tekst (powrót do stanu przed zmianami)
                             self.lineDesc.setText(previousText)
                             # Przywróć event do stanu przed zmianami
