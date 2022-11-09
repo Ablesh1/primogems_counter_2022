@@ -99,7 +99,6 @@ class Window(QMainWindow, Ui_Dialog):
 
     # Funkcja Search
     def onChanged2(self):
-
         global hidden
         listModel = self.listView.model()
         countRow = listModel.rowCount()
@@ -116,7 +115,6 @@ class Window(QMainWindow, Ui_Dialog):
         while True:
             if index == listModel.rowCount():
                 break
-
             if listModel.data(listModel.index(index, 0)).split() in hidden:
                 listModel.removeRow(index)
             else:
@@ -157,7 +155,6 @@ class Window(QMainWindow, Ui_Dialog):
 
     # Element z SelectCatBox jest usuwany z SelectCatBox-a i z CatDatabase
     def removeCats(self):
-
         try:
             toRem = self.SelectCatBox.itemText(self.SelectCatBox.currentIndex())
 
@@ -206,13 +203,11 @@ class Window(QMainWindow, Ui_Dialog):
         try:
             if text is None or text == "":
                 raise TypeError
-
             elif not isCat:
                 self.SelectCatBox.addItem(text)
                 CatDatabase.append(Category(text))
                 self.lineEditCat.clear()
                 print("Dodano kategorię o nazwie " + text)
-
             else:
                 self.lineEditCat.clear()
                 print("Istnieje już kategoria o nazwie " + text)
@@ -260,7 +255,6 @@ class Window(QMainWindow, Ui_Dialog):
             Window.errorCode = 205
             error = ErrorTab(self)
             error.exec()
-
         else:
             dialog = AddEvent(self)
             dialog.exec()
@@ -280,7 +274,6 @@ class Window(QMainWindow, Ui_Dialog):
 
     # Wyświetla wydarzenia z wybranej kategorii.
     def displayEvent(self, toLoad=None):
-
         # Zalążek ładowania
         """
         if toLoad is None:
@@ -323,10 +316,8 @@ class Window(QMainWindow, Ui_Dialog):
         # ToDo --- wyświetlanie primo
 
         for e in dispEvents:
-
             # Warunek, który sprawdza, czy można przypisana zaraz nazwa kategorii należy do istniejącej kategorii
             if QtGui.QStandardItem(e.category).text() in actCatTab:
-
                 if e.text.startswith(self.lineEdit.text()):
                     '''
                     item = QtGui.QStandardItem("   " + e.text + "\t" + e.category + "\t\t"
@@ -367,7 +358,7 @@ class ErrorTab(QDialog, errorTab.Ui_Dialog):
             case 101:
                 self.errorLabel.setText("Such an event already exists")
             case 102:
-                self.errorLabel.setText("Please enter the name of the category")
+                self.errorLabel.setText("Please enter the name of the event")
             case 201:
                 self.errorLabel.setText("Such a category already exists")
             case 202:
@@ -416,13 +407,11 @@ class AddEvent(QDialog, addEvent.Ui_Dialog):
     '''
 
     def accept(self):
-
         # Aktualnie wybrana kategoria z combobox-a w oknie edycji
         category = self.catCombo.itemText(self.catCombo.currentIndex())
 
         for cat in CatDatabase:
             if category == cat.name:
-
                 if self.lineDesc.text() is None or self.lineDesc.text() == "":
                     print("To pole nie może być puste")
                     Window.errorCode = 102
@@ -531,7 +520,6 @@ class EditEvents(QDialog, editEvent.Ui_Dialog):
         return isEqual
 
     def accept(self):
-
         # Aktualnie wybrana kategoria z combobox-a w oknie edycji
         category = self.catCombo.itemText(self.catCombo.currentIndex())
 
@@ -585,7 +573,6 @@ class EditEvents(QDialog, editEvent.Ui_Dialog):
         # Edycja eventów
         for cat in CatDatabase:
             if category == cat.name:
-
                 if self.lineDesc.text() is None or self.lineDesc.text() == "":
                     print("To pole nie może być puste")
                     Window.errorCode = 102
@@ -709,10 +696,8 @@ def countAbyss(period, monthsLeft):
     if daysOfMonthsLeft >= 16 and (now.day + period) >= 16:
         abyss += 1
         period -= daysOfMonthsLeft
-
     elif daysOfMonthsLeft < 16 and (now.day + period) >= 16:
         period -= daysOfMonthsLeft
-
     else:
         period = 0
 
