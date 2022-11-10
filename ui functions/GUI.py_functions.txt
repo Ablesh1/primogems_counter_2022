@@ -1,11 +1,12 @@
-	self.retranslateUi(Dialog)
-        self.pushRemoveCat.clicked.connect(Dialog.execRem) # type: ignore
-        self.pushAddCat.clicked.connect(Dialog.execAdd) # type: ignore
-        self.pushButton.pressed.connect(Dialog.open) # type: ignore
-        self.SelectCatBox.currentIndexChanged['QString'].connect(Dialog.displayEvent) # type: ignore
+
+        self.retranslateUi(Dialog)
+        self.pushRemCat.clicked.connect(Dialog.execRem)
+        self.pushAddCat.clicked.connect(Dialog.execAdd)
+        self.pushAddEvent.pressed.connect(Dialog.open)
+        self.selectBoxCat.currentIndexChanged['QString'].connect(Dialog.displayEvent)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
-        self.listView.clicked[QtCore.QModelIndex].connect(self.on_clicked)
-        self.lineEdit.textChanged.connect(self.onChanged2)
+        self.listViewEvent.clicked[QtCore.QModelIndex].connect(self.on_clicked)
+        self.lineEditSearch.textChanged.connect(self.onChanged2)
 
 
 
@@ -16,12 +17,3 @@
 
 1586
 975
-
-        self.retranslateUi(Dialog)
-        self.pushRemCat.clicked.connect(Dialog.execRem)
-        self.pushAddCat.clicked.connect(Dialog.execAdd)
-        self.pushAddEvent.pressed.connect(Dialog.open)
-        self.selectBoxCat.currentIndexChanged['QString'].connect(Dialog.displayEvent)
-        QtCore.QMetaObject.connectSlotsByName(Dialog)
-        self.listViewEvent.clicked[QtCore.QModelIndex].connect(self.on_clicked)
-        self.lineEditSearch.textChanged.connect(self.onChanged2)
