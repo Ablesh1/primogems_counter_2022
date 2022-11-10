@@ -419,8 +419,10 @@ class AddEvent(QDialog, addEventTab.Ui_Dialog):
                     error.exec()
                 else:
                     # Używamy funkcji mainPrimo do wprowadzenia liczby primo
-                    newEvent = Event(self.calendarWidget.selectedDate().day(), self.calendarWidget.selectedDate().month(),
-                                     self.calendarWidget.selectedDate().year(), 0, self.lineEditName.text(), cat.name,
+                    newEvent = Event(self.calendarWidget.selectedDate().day(),
+                                     self.calendarWidget.selectedDate().month(),
+                                     self.calendarWidget.selectedDate().year(),
+                                     0, self.lineEditName.text(), cat.name,
                                      mainPrimo(self))
                     try:
                         # Nie można stworzyć wydarzenia, które jest już w bazie general
@@ -580,8 +582,10 @@ class EditEvents(QDialog, editEventTab.Ui_Dialog):
                     error.exec()
                 else:
                     # Używamy funkcji mainPrimo do wprowadzenia liczby primo
-                    newEvent = Event(self.calendarWidget.selectedDate().day(), self.calendarWidget.selectedDate().month(),
-                                     self.calendarWidget.selectedDate().year(), 0, self.lineEditName.text(), cat.name,
+                    newEvent = Event(self.calendarWidget.selectedDate().day(),
+                                     self.calendarWidget.selectedDate().month(),
+                                     self.calendarWidget.selectedDate().year(),
+                                     0, self.lineEditName.text(), cat.name,
                                      mainPrimo(self))
                     try:
                         # Nie można stworzyć wydarzenia, które jest już w bazie general
@@ -617,11 +621,13 @@ class EditEvents(QDialog, editEventTab.Ui_Dialog):
                                 cat.eventToEdit(newEvent, catIndex)
                                 general.eventToEdit(newEvent, genIndex)
                                 print("Edytowano wydarzenie " + self.lineEditName.text() + " w kategorii " + cat.name)
-                                print("Edytowano wydarzenie " + self.lineEditName.text() + " w kategorii " + general.name)
+                                print("Edytowano wydarzenie " + self.lineEditName.text() + " w kategorii "
+                                      + general.name)
                                 self.lineEditName.clear()
                             else:
                                 general.eventToEdit(newEvent, genIndex)
-                                print("Edytowano wydarzenie " + self.lineEditName.text() + " w kategorii " + general.name)
+                                print("Edytowano wydarzenie " + self.lineEditName.text() + " w kategorii "
+                                      + general.name)
                                 self.lineEditName.clear()
                         else:
                             raise TypeError
