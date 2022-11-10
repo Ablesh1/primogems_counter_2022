@@ -100,7 +100,7 @@
        <number>10</number>
       </property>
       <item>
-       <widget class="QLabel" name="label_2">
+       <widget class="QLabel" name="labelCat">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
           <horstretch>0</horstretch>
@@ -140,7 +140,7 @@ color: rgb(252,252,252);</string>
        </widget>
       </item>
       <item>
-       <widget class="QComboBox" name="SelectCatBox">
+       <widget class="QComboBox" name="selectBoxCat">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
           <horstretch>0</horstretch>
@@ -192,7 +192,7 @@ color: rgb(252,252,252);</string>
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label">
+       <widget class="QLabel" name="labelNewCat">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
           <horstretch>0</horstretch>
@@ -329,7 +329,7 @@ color: rgb(252,252,252);</string>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushRemoveCat">
+         <widget class="QPushButton" name="pushRemCat">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
             <horstretch>0</horstretch>
@@ -384,7 +384,7 @@ color: rgb(252,252,252);</string>
        </spacer>
       </item>
       <item>
-       <widget class="QLabel" name="label_3">
+       <widget class="QLabel" name="labelSearch">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
           <horstretch>0</horstretch>
@@ -427,7 +427,7 @@ color: rgb(252,252,252);</string>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="lineEdit">
+       <widget class="QLineEdit" name="lineEditSearch">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
           <horstretch>0</horstretch>
@@ -470,7 +470,7 @@ color: rgb(252,252,252);</string>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="pushAddEvent">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
           <horstretch>0</horstretch>
@@ -510,7 +510,7 @@ color: rgb(252,252,252);</string>
      </layout>
     </item>
     <item>
-     <widget class="QListView" name="listView">
+     <widget class="QListView" name="listViewEvent">
       <property name="font">
        <font>
         <family>Bodoni MT Black</family>
@@ -545,7 +545,7 @@ color: rgb(37,58,121)</string>
  <resources/>
  <connections>
   <connection>
-   <sender>pushRemoveCat</sender>
+   <sender>pushRemCat</sender>
    <signal>clicked()</signal>
    <receiver>Dialog</receiver>
    <slot>execRem()</slot>
@@ -577,7 +577,7 @@ color: rgb(37,58,121)</string>
    </hints>
   </connection>
   <connection>
-   <sender>pushButton</sender>
+   <sender>pushAddEvent</sender>
    <signal>pressed()</signal>
    <receiver>Dialog</receiver>
    <slot>open()</slot>
@@ -593,7 +593,7 @@ color: rgb(37,58,121)</string>
    </hints>
   </connection>
   <connection>
-   <sender>SelectCatBox</sender>
+   <sender>selectBoxCat</sender>
    <signal>currentIndexChanged(QString)</signal>
    <receiver>Dialog</receiver>
    <slot>displayEvent()</slot>

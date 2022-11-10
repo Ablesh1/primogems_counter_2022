@@ -91,7 +91,7 @@ class Window(QMainWindow, Ui_Dialog):
     '''
     def onChanged(self):
         print(CatDatabase)
-        print(self.SelectCatBox.itemText(self.SelectCatBox.currentIndex()))
+        print(self.selectBoxCat.itemText(self.selectBoxCat.currentIndex()))
     '''
 
     # Kody błędu przydadzą się do ustalenia reguł działania projektu
@@ -100,7 +100,7 @@ class Window(QMainWindow, Ui_Dialog):
     # Funkcja Search
     def onChanged2(self):
         global hidden
-        listModel = self.listView.model()
+        listModel = self.listViewEvent.model()
         countRow = listModel.rowCount()
         for index in range(countRow + 1):
             try:
@@ -108,7 +108,7 @@ class Window(QMainWindow, Ui_Dialog):
             except:
                 continue
 
-            if not expression.startswith(self.lineEdit.text()):
+            if not expression.startswith(self.lineEditSearch.text()):
                 hidden.append(listModel.data(listModel.index(index, 0)).split())
 
         index = 0
@@ -125,8 +125,8 @@ class Window(QMainWindow, Ui_Dialog):
         self.saveEvents()
 
     def on_clicked(self, index):
-        self.listView.setCurrentIndex(index)
-        item = self.listView.currentIndex()
+        self.listViewEvent.setCurrentIndex(index)
+        item = self.listViewEvent.currentIndex()
         itemData = item.data()
         splitted = itemData.split("\t")
         for x in splitted:
@@ -134,9 +134,9 @@ class Window(QMainWindow, Ui_Dialog):
                 splitted.remove(x)
 
         # ToDo --- usuwanie znaków specjalnych z selectedEvents
-        # split 3 spacji z początku opisu wydarzenia w listView
+        # split 3 spacji z początku opisu wydarzenia w listViewEvent
         splitted[0] = splitted[0][3:]
-        # split enter-a i 3 spacji z początku daty wydarzenia w listView
+        # split enter-a i 3 spacji z początku daty wydarzenia w listViewEvent
         splitted[2] = splitted[2][4:]
 
         selectedEvent.clear()
@@ -148,15 +148,15 @@ class Window(QMainWindow, Ui_Dialog):
         dialog = EditEvents(self)
         dialog.exec()
 
-    # Dodawanie kategorii z CatDatabase do SelectCatBox-a na przy otwarciu okna
+    # Dodawanie kategorii z CatDatabase do selectBoxCat-a na przy otwarciu okna
     def firstAddCats(self):
         for x in CatDatabase:
-            self.SelectCatBox.addItem(x.name)
+            self.selectBoxCat.addItem(x.name)
 
-    # Element z SelectCatBox jest usuwany z SelectCatBox-a i z CatDatabase
+    # Element z selectBoxCat jest usuwany z selectBoxCat-a i z CatDatabase
     def removeCats(self):
         try:
-            toRem = self.SelectCatBox.itemText(self.SelectCatBox.currentIndex())
+            toRem = self.selectBoxCat.itemText(self.selectBoxCat.currentIndex())
 
             # Jeszcze sobie wybierzemy nazwę/nazwy kategorii, których nie usuwamy.
             # General na pewno.
@@ -166,7 +166,7 @@ class Window(QMainWindow, Ui_Dialog):
                 error = ErrorTab(self)
                 error.exec()
             else:
-                self.SelectCatBox.removeItem(self.SelectCatBox.currentIndex())
+                self.selectBoxCat.removeItem(self.selectBoxCat.currentIndex())
 
             for x in CatDatabase:
                 if x.name == toRem:
@@ -184,7 +184,7 @@ class Window(QMainWindow, Ui_Dialog):
             error = ErrorTab(self)
             error.exec()
             self.setWindowIcon(QIcon('resources/Troll-faceProblem.jpg'))
-            self.listView.setStyleSheet("background-image : url(resources/Troll-faceProblem.jpg);")
+            self.listViewEvent.setStyleSheet("background-image : url(resources/Troll-faceProblem.jpg);")
 
         # Ważne, żeby po usunięciu kategorii zniknęły jej Eventy z ViewList-y.
         self.displayEvent()
@@ -204,7 +204,7 @@ class Window(QMainWindow, Ui_Dialog):
             if text is None or text == "":
                 raise TypeError
             elif not isCat:
-                self.SelectCatBox.addItem(text)
+                self.selectBoxCat.addItem(text)
                 CatDatabase.append(Category(text))
                 self.lineEditCat.clear()
                 print("Dodano kategorię o nazwie " + text)
@@ -260,16 +260,16 @@ class Window(QMainWindow, Ui_Dialog):
             dialog.exec()
 
         # IDEA:
-        # Przyjmujemy string z SelectCatBox-a z nazwą aktualnie wybranej kategorii
+        # Przyjmujemy string z selectBoxCat-a z nazwą aktualnie wybranej kategorii
         # Szukamy tej kategorii w CatDataBase po nazwie i do specjalnie nowo stworzonej tablicy wrzucamy jej eventy
         # Wypisujemy eventy do ListView.
 
     # Zwraca nazwę aktualnej kategorii
     def actCat(self):
-        actCat = self.SelectCatBox.itemText(self.SelectCatBox.currentIndex())
+        actCat = self.selectBoxCat.itemText(self.selectBoxCat.currentIndex())
         for x in CatDatabase:
-            if x.name == self.SelectCatBox.itemText(self.SelectCatBox.currentIndex()):
-                actCat = self.SelectCatBox.itemText(self.SelectCatBox.currentIndex())
+            if x.name == self.selectBoxCat.itemText(self.selectBoxCat.currentIndex()):
+                actCat = self.selectBoxCat.itemText(self.selectBoxCat.currentIndex())
         return actCat
 
     # Wyświetla wydarzenia z wybranej kategorii.
@@ -285,10 +285,10 @@ class Window(QMainWindow, Ui_Dialog):
         # Ustawianie viewList z poziomu okna Window
         # To ma tu być, bo wtedy dynamicznie zmieniają się wydarzenia w zależności od kategorii
         model = QtGui.QStandardItemModel()
-        self.listView.setModel(model)
+        self.listViewEvent.setModel(model)
 
         # Nagłówek i uzupełnianie viewList
-        row = self.listView.model()
+        row = self.listViewEvent.model()
         label = QtGui.QStandardItem("")
         row.appendRow(label)
 
@@ -318,7 +318,7 @@ class Window(QMainWindow, Ui_Dialog):
         for e in dispEvents:
             # Warunek, który sprawdza, czy można przypisana zaraz nazwa kategorii należy do istniejącej kategorii
             if QtGui.QStandardItem(e.category).text() in actCatTab:
-                if e.text.startswith(self.lineEdit.text()):
+                if e.text.startswith(self.lineEditSearch.text()):
                     '''
                     item = QtGui.QStandardItem("   " + e.text + "\t" + e.category + "\t\t"
                                                + str(e.day).zfill(2) + "." + str(e.month).zfill(2) + "."
@@ -330,7 +330,7 @@ class Window(QMainWindow, Ui_Dialog):
                                                + str(e.year).zfill(2) + "\t" + str(e.primogems))
                     row.appendRow(item)
             else:
-                if e.text.startswith(self.lineEdit.text()):
+                if e.text.startswith(self.lineEditSearch.text()):
                     # Kolejne elementy selectedEvent !!! pierwsza linia ma tak zostać !!!
                     item = QtGui.QStandardItem("   " + e.text + "\t" + "GENERAL" + "\t\n"
                                                + "   " + str(e.day).zfill(2) + "." + str(e.month).zfill(2) + "."
@@ -338,7 +338,7 @@ class Window(QMainWindow, Ui_Dialog):
                     row.appendRow(item)
                     # Od teraz te kategorie zostają w GENERAL z możliwością przywrócenia ich do dawnych kategorii
 
-        # self.listView.setCurrentIndex(self.entry.indexFromItem(item))
+        # self.listViewEvent.setCurrentIndex(self.entry.indexFromItem(item))
 
 
 # Loading i ładowanie głównego okna programu
