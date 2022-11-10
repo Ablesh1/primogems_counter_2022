@@ -12,8 +12,9 @@ pip install pyqt5 pyqt5-tools
 pip install PyQt5==5.15.5
 
 pyuic5 -o GUI.py GUI.ui  
-pyuic5 -o addEvent.py addEvent.ui  
-pyuic5 -o editEvent.py editEvent.ui  
+pyuic5 -o addEventTab.py addEventTab.ui  
+pyuic5 -o editEventTab.py editEventTab.ui  
+pyuic5 -o errorTab.py errorTab.ui   
 
 https://realpython.com/qt-designer-python/  
 
