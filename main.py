@@ -1,7 +1,7 @@
 import select
 import sys
-import addEvent
-import editEvent
+import addEventTab
+import editEventTab
 import errorTab
 
 import datetime
@@ -372,7 +372,7 @@ class ErrorTab(QDialog, errorTab.Ui_Dialog):
 
 
 # Loading i otwieranie widget-ów
-class AddEvent(QDialog, addEvent.Ui_Dialog):
+class AddEvent(QDialog, addEventTab.Ui_Dialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
@@ -465,7 +465,7 @@ class AddEvent(QDialog, addEvent.Ui_Dialog):
         mainWindow.displayEvent()
 
 
-class EditEvents(QDialog, editEvent.Ui_Dialog):
+class EditEvents(QDialog, editEventTab.Ui_Dialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
