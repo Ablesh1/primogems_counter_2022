@@ -519,9 +519,15 @@ color: rgb(252,252,252);</string>
         <bold>true</bold>
        </font>
       </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
       <property name="styleSheet">
-       <string notr="true">background-image : url(‪D:/Program files studia/JetBrains/PyCharm 2021.3.3/projects/ZZZ/PyQt5/paimon.jpg);
+       <string notr="true">background-image : url(paimon.jpg);
 color: rgb(37,58,121)</string>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
       </property>
       <property name="alternatingRowColors">
        <bool>false</bool>

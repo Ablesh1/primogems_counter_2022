@@ -240,8 +240,10 @@ class Ui_Dialog(object):
         font.setBold(True)
         font.setWeight(75)
         self.listViewEvent.setFont(font)
-        self.listViewEvent.setStyleSheet("background-image : url(D:/Program files studia/JetBrains/PyCharm 2021.3.3/projects/ZZZ/PyQt5/paimon.jpg);\n"
+        self.listViewEvent.setFocusPolicy(QtCore.Qt.NoFocus)
+        self.listViewEvent.setStyleSheet("background-image : url(paimon.jpg);\n"
 "color: rgb(37,58,121)")
+        self.listViewEvent.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.listViewEvent.setAlternatingRowColors(False)
         self.listViewEvent.setObjectName("listViewEvent")
         self.horizontalLayout_2.addWidget(self.listViewEvent)
