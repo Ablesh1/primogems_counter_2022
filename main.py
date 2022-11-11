@@ -102,51 +102,67 @@ class Window(QMainWindow, Ui_Dialog):
         global hidden
         listModel = self.listViewEvent.model()
         countRow = listModel.rowCount()
-        for index in range(countRow + 1):
+        for index in range(countRow):
             try:
                 expression = (listModel.data(listModel.index(index, 0)).split()[0])
             except:
                 continue
 
+            # Ukryj, jeżeli nazwa eventu nie zaczyna się wybranym ciągiem liter
             if not expression.startswith(self.lineEditSearch.text()):
                 hidden.append(listModel.data(listModel.index(index, 0)).split())
 
         index = 0
         while True:
-            if index == listModel.rowCount():
+            # Brak wyszukań po cofnięciu wyszukania
+            if listModel.rowCount() == 0:
+                self.displayEvent()
                 break
+            # Wprowadzenie wyszukania
+            elif index == listModel.rowCount():
+                break
+            else:
+                pass
+            # Ukrywa (usuwa) niewyszukane eventy
             if listModel.data(listModel.index(index, 0)).split() in hidden:
                 listModel.removeRow(index)
+            # Wyświetla wyszukane eventy
             else:
                 index += 1
                 self.displayEvent()
 
         hidden = []
-        self.saveEvents()
+        # self.saveEvents()
 
     def on_clicked(self, index):
         self.listViewEvent.setCurrentIndex(index)
         item = self.listViewEvent.currentIndex()
         itemData = item.data()
-        splitted = itemData.split("\t")
-        for x in splitted:
-            if x == "":
-                splitted.remove(x)
 
-        # ToDo --- usuwanie znaków specjalnych z selectedEvents
-        # split 3 spacji z początku opisu wydarzenia w listViewEvent
-        splitted[0] = splitted[0][3:]
-        # split enter-a i 3 spacji z początku daty wydarzenia w listViewEvent
-        splitted[2] = splitted[2][4:]
+        try:
+            # ToDo --- usuwanie znaków specjalnych z selectedEvents
+            splitted = itemData.split("\t")
 
-        selectedEvent.clear()
-        for x in splitted:
-            selectedEvent.append(x)
+            # Usuwa puste elementy
+            for x in splitted:
+                if x == "":
+                    splitted.remove(x)
 
-        # print(selectedEvent)
+            # Usuwa niepotrzebne znaki i komentarze
+            splitted[0] = splitted[0][3:-7]
+            splitted[1] = splitted[1][3:-8]
+            splitted[2] = splitted[2][3:-9]
+            splitted[3] = splitted[3][3:]
 
-        dialog = EditEvents(self)
-        dialog.exec()
+            selectedEvent.clear()
+            for x in splitted:
+                selectedEvent.append(x)
+
+            dialog = EditEvents(self)
+            dialog.exec()
+
+        except Exception as e:
+            print(e)
 
     # Dodawanie kategorii z CatDatabase do selectBoxCat-a na przy otwarciu okna
     def firstAddCats(self):
@@ -287,10 +303,12 @@ class Window(QMainWindow, Ui_Dialog):
         model = QtGui.QStandardItemModel()
         self.listViewEvent.setModel(model)
 
-        # Nagłówek i uzupełnianie viewList
+        # Nagłówek (już niepotrzebny) i uzupełnianie viewList
         row = self.listViewEvent.model()
+        '''
         label = QtGui.QStandardItem("")
         row.appendRow(label)
+        '''
 
         # Tworzy listę eventów, z obecnie wybranej kategorii, do wyświetlenia
         actCat = self.actCat()
@@ -325,16 +343,20 @@ class Window(QMainWindow, Ui_Dialog):
                                                + str(e.year).zfill(2) + "\t" + "Primogems\t" + str(e.primogems))
                     '''
                     # Kolejne elementy selectedEvent !!! pierwsza linia ma tak zostać !!!
-                    item = QtGui.QStandardItem("   " + e.text + "\t" + e.category + "\t\n"
-                                               + "   " + str(e.day).zfill(2) + "." + str(e.month).zfill(2) + "."
-                                               + str(e.year).zfill(2) + "\t" + str(e.primogems))
+                    item = QtGui.QStandardItem("   " + e.text + "\n"
+                                               + "   " + "CAT" + "\t   " + e.category + "\n"
+                                               + "   " + "DATE" + "\t   " + str(e.day).zfill(2)
+                                               + "." + str(e.month).zfill(2) + "." + str(e.year).zfill(2) + "\n"
+                                               + "   " + "PRIMO" + "\t   " + str(e.primogems))
                     row.appendRow(item)
             else:
                 if e.text.startswith(self.lineEditSearch.text()):
                     # Kolejne elementy selectedEvent !!! pierwsza linia ma tak zostać !!!
-                    item = QtGui.QStandardItem("   " + e.text + "\t" + "GENERAL" + "\t\n"
-                                               + "   " + str(e.day).zfill(2) + "." + str(e.month).zfill(2) + "."
-                                               + str(e.year).zfill(2) + "\t" + str(e.primogems))
+                    item = QtGui.QStandardItem("   " + e.text + "\n"
+                                               + "   " + "CAT" + "\t   " + "GENERAL" + "\n"
+                                               + "   " + "DATE" + "\t   " + str(e.day).zfill(2)
+                                               + "." + str(e.month).zfill(2) + "." + str(e.year).zfill(2) + "\n"
+                                               + "   " + "PRIMO" + "\t   " + str(e.primogems))
                     row.appendRow(item)
                     # Od teraz te kategorie zostają w GENERAL z możliwością przywrócenia ich do dawnych kategorii
 
