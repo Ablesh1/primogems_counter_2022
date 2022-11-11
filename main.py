@@ -434,12 +434,8 @@ class AddEvent(QDialog, addEventTab.Ui_Dialog):
 
         for cat in CatDatabase:
             if category == cat.name:
-                if self.lineEditName.text() is None or self.lineEditName.text() == "":
-                    print("To pole nie może być puste")
-                    Window.errorCode = 102
-                    error = ErrorTab(self)
-                    error.exec()
-                else:
+                if not self.lineEditName.text() is None and not self.lineEditName.text() == "" \
+                        and not len(self.lineEditName.text()) == self.lineEditName.text().count(" "):
                     # Używamy funkcji mainPrimo do wprowadzenia liczby primo
                     newEvent = Event(self.calendarWidget.selectedDate().day(),
                                      self.calendarWidget.selectedDate().month(),
@@ -484,6 +480,11 @@ class AddEvent(QDialog, addEventTab.Ui_Dialog):
                                 self.lineEditName.clear()
                         else:
                             raise TypeError
+                else:
+                    print("To pole nie może być puste")
+                    Window.errorCode = 102
+                    error = ErrorTab(self)
+                    error.exec()
 
         # Wyświetlanie wydarzeń po zamknięciu okna przyciskiem OK
         mainWindow.displayEvent()
@@ -562,7 +563,6 @@ class EditEvents(QDialog, editEventTab.Ui_Dialog):
                 for y in x.heldEvents:
                     i += 1
                     if EditEvents.checkIfEqual(selectedEvent, y):
-                        print(selectedEvent)
                         genIndex += i
             # W kategorii innej niż general
             else:
@@ -597,12 +597,8 @@ class EditEvents(QDialog, editEventTab.Ui_Dialog):
         # Edycja eventów
         for cat in CatDatabase:
             if category == cat.name:
-                if self.lineEditName.text() is None or self.lineEditName.text() == "":
-                    print("To pole nie może być puste")
-                    Window.errorCode = 102
-                    error = ErrorTab(self)
-                    error.exec()
-                else:
+                if not self.lineEditName.text() is None and not self.lineEditName.text() == "" \
+                        and not len(self.lineEditName.text()) == self.lineEditName.text().count(" "):
                     # Używamy funkcji mainPrimo do wprowadzenia liczby primo
                     newEvent = Event(self.calendarWidget.selectedDate().day(),
                                      self.calendarWidget.selectedDate().month(),
@@ -619,22 +615,42 @@ class EditEvents(QDialog, editEventTab.Ui_Dialog):
                             error.exec()
 
                             # Ustaw na poprzedni domyślny tekst (powrót do stanu przed zmianami)
-                            self.lineEditName.setText(previousText)
-                            # Przywróć event do stanu przed zmianami
-                            newEvent = keptEvent
+                            self.lineEditName.setText(keptEvent.text)
+
+                            # Zapisz (keptEvent) z powrotem do bazy w celu ew. ponownego usunięcia
+                            if cat.name != general.name:
+                                cat.eventToEdit(keptEvent, catIndex)
+                                general.eventToEdit(keptEvent, genIndex)
+                                print("Edytowano wydarzenie " + self.lineEditName.text() + " w kategorii " + cat.name)
+                                print(
+                                    "Edytowano wydarzenie " + self.lineEditName.text() + " w kategorii " + general.name)
+                            else:
+                                general.eventToEdit(keptEvent, genIndex)
+                                print(
+                                    "Edytowano wydarzenie " + self.lineEditName.text() + " w kategorii " + general.name)
+
+                            mainWindow.displayEvent()
 
                         # Zawsze dodajemy do generala i/albo innej kategorii
                         # General ma mieć wszystkie wydarzenia
-                        if cat.name != general.name:
+                        elif cat.name != general.name:
                             cat.eventToEdit(newEvent, catIndex)
                             general.eventToEdit(newEvent, genIndex)
                             print("Edytowano wydarzenie " + self.lineEditName.text() + " w kategorii " + cat.name)
                             print("Edytowano wydarzenie " + self.lineEditName.text() + " w kategorii " + general.name)
                             self.lineEditName.clear()
+
+                            mainWindow.displayEvent()
+                            # Ładne zamykanie okienka
+                            self.reject()
                         else:
                             general.eventToEdit(newEvent, genIndex)
                             print("Edytowano wydarzenie " + self.lineEditName.text() + " w kategorii " + general.name)
                             self.lineEditName.clear()
+
+                            mainWindow.displayEvent()
+                            # Ładne zamykanie okienka
+                            self.reject()
 
                     # Jeśli kategoria jest pusta:
                     except:
@@ -643,20 +659,40 @@ class EditEvents(QDialog, editEventTab.Ui_Dialog):
                                 cat.eventToEdit(newEvent, catIndex)
                                 general.eventToEdit(newEvent, genIndex)
                                 print("Edytowano wydarzenie " + self.lineEditName.text() + " w kategorii " + cat.name)
-                                print("Edytowano wydarzenie " + self.lineEditName.text() + " w kategorii "
-                                      + general.name)
+                                print(
+                                    "Edytowano wydarzenie " + self.lineEditName.text() + " w kategorii " + general.name)
                                 self.lineEditName.clear()
                             else:
                                 general.eventToEdit(newEvent, genIndex)
-                                print("Edytowano wydarzenie " + self.lineEditName.text() + " w kategorii "
-                                      + general.name)
+                                print(
+                                    "Edytowano wydarzenie " + self.lineEditName.text() + " w kategorii " + general.name)
                                 self.lineEditName.clear()
                         else:
                             raise TypeError
 
+                        mainWindow.displayEvent()
+                        # Ładne zamykanie okienka
+                        self.reject()
+                else:
+                    print("To pole nie może być puste")
+                    Window.errorCode = 102
+                    error = ErrorTab(self)
+                    error.exec()
+
+                    # Ustaw na poprzedni domyślny tekst (powrót do stanu przed zmianami)
+                    self.lineEditName.setText(keptEvent.text)
+
+                    # Zapisz (keptEvent) z powrotem do bazy w celu ew. ponownego usunięcia
+                    if cat.name != general.name:
+                        cat.eventToEdit(keptEvent, catIndex)
+                        general.eventToEdit(keptEvent, genIndex)
+                        print("Edytowano wydarzenie " + self.lineEditName.text() + " w kategorii " + cat.name)
+                        print("Edytowano wydarzenie " + self.lineEditName.text() + " w kategorii " + general.name)
+                    else:
+                        general.eventToEdit(keptEvent, genIndex)
+                        print("Edytowano wydarzenie " + self.lineEditName.text() + " w kategorii " + general.name)
+
                     mainWindow.displayEvent()
-                    # Ładne zamykanie okienka
-                    self.reject()
 
 
 class Primogems:
