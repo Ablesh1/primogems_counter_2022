@@ -1,5 +1,5 @@
-# PyQt5
-Python application for counting primogems
+# primogems_counter_2022
+Desktop application for planning and counting resources from game
 
 # Useful commands:   
 
