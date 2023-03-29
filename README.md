@@ -1,7 +1,14 @@
 # primogems_counter_2022
-Desktop application for planning and counting resources from game (under development)
+Desktop application for planning and counting resources from game 
+App is in the late development.
 
-# Useful commands:   
+## Authors:
+- [@Ablesh1](https://github.com/Ablesh1)
+
+## TechStack
+Python, PQT5, QSS
+
+## Useful commands:   
 
 python.exe -m pip install --upgrade pip  
 
