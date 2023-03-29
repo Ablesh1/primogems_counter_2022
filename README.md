@@ -1,5 +1,5 @@
 # primogems_counter_2022
-Desktop application for planning and counting resources from game
+Desktop application for planning and counting resources from game (under development)
 
 # Useful commands:   
 
